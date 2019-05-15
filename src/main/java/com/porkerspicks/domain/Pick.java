@@ -35,6 +35,12 @@ public class Pick {
 	
 	private BigDecimal price;
 	
+	private String team;
+	
+	private String opposition;
+	
+	private String division;
+	
 	private VenueType venue;
 	
 	private BetType betType;
@@ -42,7 +48,6 @@ public class Pick {
 	private ResultType forecast;
 	
 	private ResultType result;
-	
 
 	
 	public int getId() {
@@ -83,6 +88,30 @@ public class Pick {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public String getOpposition() {
+		return opposition;
+	}
+
+	public void setOpposition(String opposition) {
+		this.opposition = opposition;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
 	}
 
 	public VenueType getVenue() {
