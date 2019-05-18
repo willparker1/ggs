@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>Pick List</title>
+		<link rel="stylesheet" th:href="@{/style.css}"></link>
+	</head>
+<body>
+	<h2>Pick List</h2>
+	<div th:unless="${#lists.isEmpty(picks)}">
+		<dl th:each="pick : ${picks}">
+			<dt class="pickHeadline">
+				<span th:text="${pick.team}">Team</span> to beat <span
+					th:text="${pick.opposition}">Opposition</span> @ <span
+					th:text="${pick.price}">Price</span> 
+			</dt>
+			<dd class="pickResult">
+				<span th:if="${pick.result}" th:text="${book.result}">Result</span>
+				<span th:if="${book.result eq null}"> No result	available</span>
+			</dd>
+		</dl>
+	</div>
+	<div th:if="${#lists.isEmpty(picks)}">
+		<p>No picks available.</p>
+	</div>
+	<hr />
+	<h3>Add a pick</h3>
+	<form method="POST">
+		<label for="team">Team:</label> <input type="text" name="team"
+			size="50"></input><br /> <label for="opposition">Opposition:</label> <input
+			type="text" name="opposition" size="50"></input><br /> <label for="price">Price:</label>
+		<input type="text" name="price" size="15"></input><br /> <label
+			for="result">Result:</label><br />
+		<textarea name="result" cols="80" rows="5"> </textarea>
+		<br /> <input type="submit"></input>
+	</form>
+</body>
+</html>
