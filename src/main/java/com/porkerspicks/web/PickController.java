@@ -21,6 +21,13 @@ public class PickController {
 		this.pickRepository = pickRepository;
 	}
 	
+	@RequestMapping(value="/",method=RequestMethod.GET)
+	public String picks( Model model ) {
+		List<Pick> divisionsPicks = pickRepository.findAll();
+		model.addAllAttributes(divisionsPicks);
+		return "pickList";
+	}
+	
 	@RequestMapping(value="/{division}",method=RequestMethod.GET)
 	public String divisionsPicks( @PathVariable("division") String division, Model model ) {
 		List<Pick> divisionsPicks = pickRepository.findByDivisioin(division);
