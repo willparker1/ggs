@@ -8,5 +8,5 @@ import com.porkerspicks.domain.Pick;
 
 public interface PickRepository extends JpaRepository<Pick, Integer> {
 	
-	List<Pick> findByDivisioin( String division );	
+	List<Pick> findByDivision( String division );	
 }

@@ -30,12 +30,12 @@ public class PickController {
 	
 	@RequestMapping(value="/{division}",method=RequestMethod.GET)
 	public String divisionsPicks( @PathVariable("division") String division, Model model ) {
-		List<Pick> divisionsPicks = pickRepository.findByDivisioin(division);
+		List<Pick> divisionsPicks = pickRepository.findByDivision(division);
 		model.addAllAttributes(divisionsPicks);
 		return "pickList";
 	}
 	
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(value="/pickList",method=RequestMethod.POST)
 	public String addPick( Pick pick ) {
 		pickRepository.save(pick);
 		return "redirect:/pickList";
