@@ -1,5 +1,5 @@
 server:
-  port: 9083
+  port: 8080
   
 logging:
   file: c:/dev/logs/porkerspicks.log
