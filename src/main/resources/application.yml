@@ -2,8 +2,7 @@ server:
   port: 9083
   
 logging:
-  path: c:\dev\logs
-  file: porkerspicks.log
+  file: c:/dev/logs/porkerspicks.log
   level:
     root: WARN 
     com:
