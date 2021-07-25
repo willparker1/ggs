@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  
+logging:
+  file: c:/dev/logs/porkerspicks.log
+  level:
+    root: WARN 
+    com:
+      porkerspicks: debug
+    org: 
+      springframework:
+        security: debug
