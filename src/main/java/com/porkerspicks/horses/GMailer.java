@@ -104,8 +104,6 @@ public class GMailer {
     /**
      * Create a MimeMessage using the parameters provided.
      *
-     * @param to email address of the receiver
-     * @param from email address of the sender, the mailbox account
      * @param subject subject of the email
      * @param bodyText body text of the email
      * @return the MimeMessage to be used to send email
@@ -149,10 +147,7 @@ public class GMailer {
     /**
      * Send an email from the user's mailbox to its recipient.
      *
-     * @param service Authorized Gmail API instance.
-     * @param userId User's email address. The special value "me"
      * can be used to indicate the authenticated user.
-     * @param emailContent Email to be sent.
      * @return The sent message
      * @throws MessagingException
      * @throws IOException
