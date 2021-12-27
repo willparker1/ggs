@@ -19,6 +19,7 @@ import java.util.*;
 import javax.mail.MessagingException;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.poi.xssf.usermodel.XSSFAutoFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -108,6 +109,8 @@ public class BetsReader {
     public void placeBets() {
 		
         String applicationKey = betfairConfig.getApplicationKey();
+
+		XSSFAutoFilter f;
 
         try {
         	
