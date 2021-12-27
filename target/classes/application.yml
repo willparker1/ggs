@@ -1,0 +1,76 @@
+management:
+  server: 
+    port: 8093 
+  endpoints: 
+    web: 
+      exposure: 
+        include: "*" 
+  endpoint: 
+    health:   
+      show-details: "always"
+
+spring:
+  application:    name: PorkersHorses
+  config:
+    additional-location: classpath:betfairApi.yml
+  datasource:    url: jdbc:postgresql://localhost:5432/horses
+    username: horses
+    password: norrie
+    tomcat.max-wait: 20000 
+    tomcat.max-active: 50 
+    tomcat.max-idle: 20 
+    tomcat.min-idle: 15 
+  jpa:
+    hibernate:      ddl-auto: update  
+
+server:
+  port: 8080
+  
+logging:
+  config: classpath:logback-spring.xml  file:    name: c:/dev/logs/porkerspicks.log
+  level:
+    root: info 
+    com:
+      porkerspicks: debug
+    org: 
+      springframework:
+        security: debug
+        
+betfair:
+  #sessionId: HxtF4hm+TEQYUw2BdoUN4Bp4y3a4ZA+gZj4s4S0FNhA=
+  applicationKey: PxHjgosvi9wXxzYM
+  encoding: UTF-8
+  contentType: application/json
+  timeOut: 10000
+
+  #API NG URL
+  apiUrl: https://api.betfair.com/exchange/betting/rest/v1.0/
+  
+  #Bet size
+  betSize: 300.00
+  
+  #Lay Seetings
+  laySize: 6.00
+  mediumFieldThrehhold: 7
+  largeFieldThrehhold: 15 
+  fanciedSmallFieldPriceThreshhold: 5
+  fanciedMediumFieldPriceThreshhold: 7
+  fanciedLargeFieldPriceThreshhold: 10
+  shortPricedFanciedReductionFactor: 0.6
+  mediumPricedFanciedReductionFactor: 0.6
+  largePricedFanciedReductionFactor: 0.75
+  favouriteThreshhold: 2  
+  hotFavouriteReductionFactor: 0.6
+  favouriteReductionFactor: 0.6
+  oddsOnLaySize: 2.00
+  oddsOnTiers: 
+    - 1.9
+    - 1.65
+    - 1.4
+  sizeOfMarket: 25000
+    
+  debug: false
+  
+mail:
+  from: error@porkerspicks.com
+  to:   wullparker@gmail.com
