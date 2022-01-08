@@ -225,7 +225,7 @@ public class FavouriteLayer {
         }
     }
 
-	@Scheduled(fixedDelay = 60000)
+	//@Scheduled(fixedDelay = 60000)
     public void layBets2() {
 		
         String applicationKey = betfairConfig.getApplicationKey();

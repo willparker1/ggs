@@ -18,7 +18,11 @@ public class Bet {
 	private int version;
 	private Date timestamp;
 	private String selection;
+	@Column(nullable = true)
 	private double mbo;
+
+	@Column(nullable = true)
+	private double uol;
 	private double averagePriceMatched;
 	
 	@Column(nullable = true)
@@ -51,6 +55,8 @@ public class Bet {
 	public void setMbo(double mbo) {
 		this.mbo = mbo;
 	}
+	public double getUol() { return uol;}
+	public void setUol(double uol) { this.uol = uol; }
 	public Date getTimestamp() {
 		return timestamp;
 	}

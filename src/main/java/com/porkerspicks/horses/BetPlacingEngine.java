@@ -18,7 +18,10 @@ import java.util.*;
 
 import javax.mail.MessagingException;
 
+import com.porkerspicks.horses.service.BetServiceImpl;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,85 +35,77 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BetPlacingEngine {
-	
+
+	Logger logger = LoggerFactory.getLogger(BetServiceImpl.class);
+
 	private static String CUSTOMER_REF = "3";
 	private static String EVENT_TYPE_HORSE_RACING = "7";
 
 	@Autowired
 	private ApiNgRescriptOperations rescriptOperations;
-	
+
 	@Autowired
 	private BetfairConfig betfairConfig;
-	
+
 	@Autowired
 	private GMailer gMailer;
-	
+
 	@Autowired
 	private Authenticator authenticator;
-	
+
 	@Autowired
 	private BetRepository betRepository;
-	
+
 	private Session session;
-	
+
 
 	static List<HorseSelection> horseSelections = new ArrayList<>();
-	
+
 	{
 		HorseSelection horseSelection = new HorseSelection();
-		horseSelection.setSelection("Flamboyant Joyaux");
-		horseSelection.setMbo(3.5);
-		horseSelection.setStartTime(15,55);
-		horseSelections.add( horseSelection );
-		horseSelection = new HorseSelection();
-		horseSelection.setSelection("Regional");
-		horseSelection.setMbo(3.0);
-		horseSelection.setStartTime(16,05);
+		horseSelection.setSelection("Imperium");
+		horseSelection.setUol(2.72);
+		horseSelection.setStartTime(19,15);
 		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Near Kettering");
-//		horseSelection.setMbo(3.5);
-//		horseSelection.setStartTime(17,00);
+//		horseSelection.setSelection("Cafe Sydney");
+//		horseSelection.setUol(6.6);
+//		horseSelection.setStartTime(15,20);
 //		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Glamorous Force");
-//		horseSelection.setMbo(3.5);
-//		horseSelection.setStartTime(16,35);
+//		horseSelection.setSelection("Notoriously Risky");
+//		horseSelection.setUol(5.5);
+//		horseSelection.setStartTime(16,00);
 //		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Sky Blue Thinking");
-//		horseSelection.setMbo(3.5);
-//		horseSelection.setStartTime(18,00);
+//		horseSelection.setSelection("Three Platoon");
+//		horseSelection.setUol(3.4);
+//		horseSelection.setStartTime(17,0);
 //		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Miami Joy");
-//		horseSelection.setMbo(3.5);
-//		horseSelection.setStartTime(19,00);
+//		horseSelection.setSelection("Daheer");
+//		horseSelection.setUol(4.7);
+//		horseSelection.setStartTime(18,0);
 //		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Lankaran");
-//		horseSelection.setMbo(2.5);
-//		horseSelection.setStartTime(19,8);
+//		horseSelection.setSelection("Barden Bella");
+//		horseSelection.setUol(3.45);
+//		horseSelection.setStartTime(15,05);
 //		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Un Prophete");
-//		horseSelection.setMbo(2.0);
-//		horseSelection.setStartTime(16,28);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Dusty Damsel");
-//		horseSelection.setMbo(2.5);
-//		horseSelection.setStartTime(20,00);
+//		horseSelection.setSelection("Onesmoothoperator");
+//		horseSelection.setUol(5.1);
+//		horseSelection.setStartTime(16,00);
 //		horseSelections.add( horseSelection );
 	}
-	
+
 	@Scheduled(fixedDelay = 60000)
     public void placeBets() {
-		
+
         String applicationKey = betfairConfig.getApplicationKey();
 
         try {
-        	
+
        		session = authenticator.login();
 
             MarketFilter marketFilter;
@@ -121,12 +116,12 @@ public class BetPlacingEngine {
             List<BetfairHorseSelection> betfairHorseSelections = new ArrayList<BetfairHorseSelection>();
 
             Date now = new Date();
-            System.out.println("Time: " + now);
-            
+			logger.debug("Time: " + now);
+
             List<HorseSelection> unfoundSelections = new ArrayList<HorseSelection>();
-            
+
             for ( HorseSelection horseSelection : horseSelections ) {
-            	
+
                 marketFilter = new MarketFilter();
                 marketFilter.setEventTypeIds(eventTypeIds);
 
@@ -147,104 +142,99 @@ public class BetPlacingEngine {
                 marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
                 List<MarketCatalogue> marketCatalogues = null;
-                
-               	marketCatalogues = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, 
-               			applicationKey, session.getSessionToken());	
+
+               	marketCatalogues = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
+               			applicationKey, session.getSessionToken());
 
             	BetfairIdentifier betFairIdentifier = findHorseSelection( marketCatalogues, horseSelection.getSelection() );
-            	
+
             	if ( betFairIdentifier != null ) {
-            		betfairHorseSelections.add( new BetfairHorseSelection(horseSelection,betFairIdentifier) ); 
+            		betfairHorseSelections.add( new BetfairHorseSelection(horseSelection,betFairIdentifier) );
             	} else {
             		unfoundSelections.add(horseSelection);
             	}
             }
-            
+
             for ( HorseSelection unfoundSelection : unfoundSelections ) {
             	horseSelections.remove(unfoundSelection);
             }
-            
 
-            System.out.println("\n");
-            
+
+            logger.info("\n");
+
             if ( betfairHorseSelections.size() == 0 ) {
-            	System.out.println("No selections found today!\n\n");
-            } 
-            
+            	logger.info("No selections found today!\n\n");
+            }
+
+			supplementLatestPrices(betfairHorseSelections);
+
         	List<HorseSelection> betsPlaced = new ArrayList<HorseSelection>();
-            
+
             for ( BetfairHorseSelection betFairHorseSelection : betfairHorseSelections ) {
-            	
+
             	HorseSelection horseSelection = betFairHorseSelection.getHorseSelection();
             	BetfairIdentifier betfairIdentifier = betFairHorseSelection.getBetfairIdentifier();
-            	
-	            if ( DateUtils.addMinutes(horseSelection.getStartTime(), -1).compareTo(now) < 0 ) {
-	            		            	
-	                System.out.println("\nTime to trigger bet for " + horseSelection.getSelection() + "\n\n");
-	                
-		            String marketIdChosen = betfairIdentifier.getMarketId();
-		            long selectionId = betfairIdentifier.getSelectionId();
-	                System.out.println("Placing bet on marketId: "+marketIdChosen+" with selectionId: "+selectionId+"...\n\n" + " and MBO of " + Double.toString(horseSelection.getMbo()) );
-	                List<PlaceInstruction> instructions = new ArrayList<PlaceInstruction>();
-	                PlaceInstruction instruction = new PlaceInstruction();
-	                instruction.setHandicap(0);
-	                instruction.setSide(Side.BACK);
-	                instruction.setOrderType(OrderType.LIMIT_ON_CLOSE);
-	                
-	                LimitOnCloseOrder limitOnCloseOrder = new LimitOnCloseOrder();
-	                limitOnCloseOrder.setLiability(betfairConfig.getBetSize());
-	                limitOnCloseOrder.setPrice(horseSelection.getMbo());
-	                instruction.setLimitOnCloseOrder(limitOnCloseOrder);
-	                instruction.setSelectionId(selectionId);
-	                instructions.add(instruction);
-//	                PlaceInstruction instruction = new PlaceInstruction();
-//	                instruction.setHandicap(0);
-//	                instruction.setSide(Side.BACK);
-//	                instruction.setOrderType(OrderType.LIMIT);
-//	                
-//	                LimitOrder limitOrder = new LimitOrder();
-//	                limitOrder.setSize(betfairConfig.getBetSize());
-//	                limitOrder.setPrice(horseSelection.getMbo());
-//	                limitOrder.setPersistenceType(PersistenceType.LAPSE);
-//	                instruction.setLimitOrder(limitOrder);
-//	                instruction.setSelectionId(selectionId);
-//	                instructions.add(instruction);
-	
-	                String customerRef = "3";
-	
-	                PlaceExecutionReport placeBetResult = rescriptOperations.placeOrders(marketIdChosen, instructions, customerRef, applicationKey, session.getSessionToken());
-	                
-	                PlaceInstructionReport placeInstructionReport = placeBetResult.getInstructionReports().get(0);
-	                
-	                Bet bet = new Bet();
-	                bet.setBetId(placeInstructionReport.getBetId());
-	                bet.setTimestamp(placeInstructionReport.getPlacedDate());
-	                bet.setSelection(horseSelection.getSelection());
-	                bet.setMbo(horseSelection.getMbo());
-	                bet.setAveragePriceMatched(placeInstructionReport.getAveragePriceMatched());
-	                bet.setSize(limitOnCloseOrder.getLiability());
-	                //bet.setSize(limitOrder.getSize());
-	                bet.setSizeMatched(placeInstructionReport.getSizeMatched());
-	                bet.setStatus(placeInstructionReport.getStatus());
-	                bet.setErrorCode(placeInstructionReport.getErrorCode());
-	                horseSelection.setPlacedBet(bet);
-	
-	                // Handling the operation result
-	                if (placeBetResult.getStatus() == ExecutionReportStatus.SUCCESS) {
-	                    System.out.println("**************************");
-	                    System.out.println("Your bet has been placed!!");
-	                    System.out.println("**************************");
-	                    System.out.println(placeBetResult.getInstructionReports());
-	                    betsPlaced.add(horseSelection);
-	                } else if (placeBetResult.getStatus() == ExecutionReportStatus.FAILURE) {
-	                    System.out.println("Your bet has NOT been placed :*( ");
-	                    String errormessage = "The error is: " + placeBetResult.getErrorCode() + ": " + placeBetResult.getErrorCode().getMessage();
-	                    System.out.println(errormessage);
-	                    gMailer.sendMessage("ERROR!!", errormessage);
-	                }
-	            
+
+	            if ( DateUtils.addSeconds(horseSelection.getStartTime(), -35).compareTo(now) < 0 ) {
+
+					if (betFairHorseSelection.getLastPriceTraded() < horseSelection.getUol() ) {
+
+						logger.info("\nTime to trigger bet for " + horseSelection.getSelection() + "\n\n");
+
+						String marketIdChosen = betfairIdentifier.getMarketId();
+						long selectionId = betfairIdentifier.getSelectionId();
+						logger.info("Placing bet on marketId: "+marketIdChosen+" with selectionId: "+selectionId+"...\n\n" + " and UOL of " + Double.toString(horseSelection.getUol()) + ". Quoted price: " + Double.toString(betFairHorseSelection.getLastPriceTraded()) );
+						List<PlaceInstruction> instructions = new ArrayList<PlaceInstruction>();
+						PlaceInstruction instruction = new PlaceInstruction();
+						instruction.setHandicap(0);
+						instruction.setSide(Side.BACK);
+						instruction.setOrderType(OrderType.LIMIT);
+
+						LimitOrder limitOrder = new LimitOrder();
+						limitOrder.setSize(betfairConfig.getBetSize());
+						limitOrder.setPrice(betFairHorseSelection.getLastPriceTraded()-1);
+						limitOrder.setPersistenceType(PersistenceType.LAPSE);
+						instruction.setLimitOrder(limitOrder);
+						instruction.setSelectionId(selectionId);
+						instructions.add(instruction);
+
+						String customerRef = "3";
+
+						PlaceExecutionReport placeBetResult = rescriptOperations.placeOrders(marketIdChosen, instructions, customerRef, applicationKey, session.getSessionToken());
+
+						PlaceInstructionReport placeInstructionReport = placeBetResult.getInstructionReports().get(0);
+
+						Bet bet = new Bet();
+						bet.setBetId(placeInstructionReport.getBetId());
+						bet.setTimestamp(placeInstructionReport.getPlacedDate());
+						bet.setSelection(horseSelection.getSelection());
+						bet.setMbo(horseSelection.getMbo());
+						bet.setUol(horseSelection.getUol());
+						bet.setAveragePriceMatched(placeInstructionReport.getAveragePriceMatched());
+						bet.setSize(limitOrder.getSize());
+						//bet.setSize(limitOrder.getSize());
+						bet.setSizeMatched(placeInstructionReport.getSizeMatched());
+						bet.setStatus(placeInstructionReport.getStatus());
+						bet.setErrorCode(placeInstructionReport.getErrorCode());
+						horseSelection.setPlacedBet(bet);
+
+						// Handling the operation result
+						if (placeBetResult.getStatus() == ExecutionReportStatus.SUCCESS) {
+							logger.info("**************************");
+							logger.info("Your bet has been placed!!");
+							logger.info("**************************");
+							logger.info(placeBetResult.getInstructionReports().get(0).toString());
+							betsPlaced.add(horseSelection);
+						} else if (placeBetResult.getStatus() == ExecutionReportStatus.FAILURE) {
+							logger.info("Your bet has NOT been placed :*( ");
+							String errormessage = "The error is: " + placeBetResult.getErrorCode() + ": " + placeBetResult.getErrorCode().getMessage();
+							logger.info(errormessage);
+							gMailer.sendMessage("ERROR!!", errormessage);
+						}
+					}
+
 	            } else {
-	                System.out.println("No trigger for " + horseSelection.getSelection());
+	                logger.info("No trigger for " + horseSelection.getSelection());
 	            }
             }
 
@@ -254,18 +244,45 @@ public class BetPlacingEngine {
             }
 
         } catch (Throwable anyException) {
-        	try { 
-        		System.out.println(anyException.toString());
+        	try {
+        		logger.info(anyException.toString());
         		gMailer.sendMessage("ERROR!!", anyException + " : " + anyException );
         		anyException.printStackTrace(System.out);
         	} catch (MessagingException e ) {
-        		System.out.println(e);
-        	} catch (IOException e ) { 
-        		System.out.println(e);
+        		logger.info(e.toString());
+        	} catch (IOException e ) {
+        		logger.info(e.toString());
         	}
         }
     }
-	
+
+	private void supplementLatestPrices( List<BetfairHorseSelection> betfairHorseSelections ) throws APINGException {
+
+		List<String> marketIds = new ArrayList<String>();
+
+		for (BetfairHorseSelection betfairHorseSelection : betfairHorseSelections) {
+			marketIds.add(betfairHorseSelection.getBetfairIdentifier().getMarketId());
+		}
+
+		PriceProjection priceProjection = new PriceProjection();
+		Set<PriceData> priceDatas = new HashSet<PriceData>();
+		priceDatas.add(PriceData.EX_BEST_OFFERS);
+		priceProjection.setPriceData(priceDatas);
+		List<MarketBook> marketBooks = rescriptOperations
+				.listMarketBook(marketIds, priceProjection, null,
+						null, null, betfairConfig.getApplicationKey(), session.getSessionToken());
+
+		for ( BetfairHorseSelection betfairHorseSelection : betfairHorseSelections ) {
+			for ( MarketBook marketBook : marketBooks ) {
+				marketBook.getRunners().forEach((runner) -> {
+					if (runner.getSelectionId().equals(betfairHorseSelection.getBetfairIdentifier().getSelectionId())) {
+						betfairHorseSelection.setLastPriceTraded(runner.getLastPriceTraded());
+					}
+				});
+			}
+		}
+	}
+
 	//@Scheduled(fixedDelay = 60000)
     public void updateResults() {
 		
@@ -287,18 +304,18 @@ public class BetPlacingEngine {
 
                   
             for ( ClearedOrderSummary clearedOrderSummary : clearedOrderSummaryReport.getClearedOrders() ) {
-                System.out.println(clearedOrderSummary.getPriceRequested() + "\n");                
+                logger.info(clearedOrderSummary.getPriceRequested() + "\n");                
             }
             
 
         } catch (Throwable anyException) {
         	try { 
-        		System.out.println(anyException.toString());
+        		logger.info(anyException.toString());
         		gMailer.sendMessage("ERROR!!", anyException.toString());
         	} catch (MessagingException e ) {
-        		System.out.println(e);
+        		logger.info(e.toString());
         	} catch (IOException e ) { 
-        		System.out.println(e);
+        		logger.info(e.toString());
         	}
         }
     }
@@ -316,20 +333,20 @@ public class BetPlacingEngine {
 					horseSelection = new BetfairIdentifier();
 					horseSelection.setSelectionId( runner.getSelectionId() );
 					horseSelection.setMarketId( marketCatalogue.getMarketId() );
-					System.out.println("Found Selection: " + horseName );
+					logger.info("Found Selection: " + horseName );
 				}
 			}
 		}
 		
 		if ( horseSelection == null ) {
 			String message = "No market found for selection " + horseName + ".";
-    		System.out.println(message);
+    		logger.info(message);
         	try { 
         		gMailer.sendMessage("ERROR!!", message );
         	} catch (MessagingException e ) {
-        		System.out.println(e);
+        		logger.info(e.toString());
         	} catch (IOException e ) { 
-        		System.out.println(e);
+        		logger.info(e.toString());
         	}
 		}
 		
@@ -340,6 +357,7 @@ public class BetPlacingEngine {
     	
     	private HorseSelection horseSelection;
 		private BetfairIdentifier betfairIdentifier;
+		private Double lastPriceTraded;
     	
     	public BetfairHorseSelection(HorseSelection horseSelection, BetfairIdentifier betfairIdentifier) {
 			super();
@@ -353,5 +371,7 @@ public class BetPlacingEngine {
 		public BetfairIdentifier getBetfairIdentifier() {
 			return betfairIdentifier;
 		}
-    }
+		public Double getLastPriceTraded() { return lastPriceTraded; }
+		public void setLastPriceTraded(Double lastPriceTraded) { this.lastPriceTraded = lastPriceTraded; }
+	}
 }

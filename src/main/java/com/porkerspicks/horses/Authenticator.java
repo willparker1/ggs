@@ -67,7 +67,8 @@ public class Authenticator {
  
  
             System.out.println("executing request" + httpPost.getRequestLine());
- 
+            System.out.println("executing request" + httpPost.getEntity() );
+
             HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             

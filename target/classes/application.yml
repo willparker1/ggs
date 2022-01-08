@@ -10,10 +10,12 @@ management:
       show-details: "always"
 
 spring:
-  application:    name: PorkersHorses
+  application:
+    name: PorkersHorses
   config:
     additional-location: classpath:betfairApi.yml
-  datasource:    url: jdbc:postgresql://localhost:5432/horses
+  datasource:
+    url: jdbc:postgresql://localhost:5432/horses
     username: horses
     password: norrie
     tomcat.max-wait: 20000 
@@ -21,15 +23,18 @@ spring:
     tomcat.max-idle: 20 
     tomcat.min-idle: 15 
   jpa:
-    hibernate:      ddl-auto: update  
+    hibernate:
+      ddl-auto: update  
 
 server:
   port: 8080
   
 logging:
-  config: classpath:logback-spring.xml  file:    name: c:/dev/logs/porkerspicks.log
+  config: classpath:logback-spring.xml
+  file:
+    name: c:/dev/logs/porkerspicks.log
   level:
-    root: info 
+    root: info
     com:
       porkerspicks: debug
     org: 
@@ -38,7 +43,10 @@ logging:
         
 betfair:
   #sessionId: HxtF4hm+TEQYUw2BdoUN4Bp4y3a4ZA+gZj4s4S0FNhA=
+  # Delayed development  app key
   applicationKey: PxHjgosvi9wXxzYM
+  # Live app key
+  # applicationKey: P3cJuPs8scH2xYTl
   encoding: UTF-8
   contentType: application/json
   timeOut: 10000
@@ -47,7 +55,7 @@ betfair:
   apiUrl: https://api.betfair.com/exchange/betting/rest/v1.0/
   
   #Bet size
-  betSize: 300.00
+  betSize: 200.00
   
   #Lay Seetings
   laySize: 6.00
@@ -68,9 +76,9 @@ betfair:
     - 1.65
     - 1.4
   sizeOfMarket: 25000
-    
-  debug: false
-  
+
 mail:
   from: error@porkerspicks.com
   to:   wullparker@gmail.com
+
+debug: false

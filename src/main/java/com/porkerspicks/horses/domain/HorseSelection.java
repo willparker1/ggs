@@ -12,7 +12,8 @@ import java.util.Date;
 public class HorseSelection {
 	
 	private String selection;
-	private double mbo;
+	private double mbo = 0;
+	private double uol = 0;
 	private Date startTime = new Date();
 	private Bet placedBet;
 	
@@ -37,11 +38,20 @@ public class HorseSelection {
 	public void setStartTime( int hour, int minute ) {
 		startTime.setHours(hour);
 		startTime.setMinutes(minute);
+		startTime.setSeconds(0);
 	}
 	public Bet getPlacedBet() {
 		return placedBet;
 	}
 	public void setPlacedBet(Bet placedBet) {
 		this.placedBet = placedBet;
+	}
+
+	public double getUol() {
+		return uol;
+	}
+
+	public void setUol(double uol) {
+		this.uol = uol;
 	}
 }
