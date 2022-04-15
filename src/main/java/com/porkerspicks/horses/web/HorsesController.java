@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.porkerspicks.horses.domain.Bet;
-import com.porkerspicks.horses.events.BetEvent;
+import com.porkerspicks.horses.service.events.BetEvent;
 import com.porkerspicks.horses.service.BetService;
 
 @RestController

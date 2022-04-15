@@ -15,16 +15,17 @@ spring:
   config:
     additional-location: classpath:betfairApi.yml
   datasource:
-    url: jdbc:postgresql://localhost:5432/horses
-    username: horses
-    password: norrie
+#    url: jdbc:mysql://localhost:3306/horses
+    url: jdbc:mysql://database-1.cvctlqjfqemh.us-east-1.rds.amazonaws.com:3306/horses
+    username: porker
+    password: 4Norrie!
     tomcat.max-wait: 20000 
     tomcat.max-active: 50 
     tomcat.max-idle: 20 
     tomcat.min-idle: 15 
   jpa:
     hibernate:
-      ddl-auto: update  
+      ddl-auto: update
 
 server:
   port: 8080

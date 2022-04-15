@@ -1,4 +1,4 @@
-package com.porkerspicks.horses.events;
+package com.porkerspicks.horses.service.events;
 
 import org.springframework.context.ApplicationEvent;
 

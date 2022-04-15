@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.porkerspicks.horses.events.BetEvent;
+import com.porkerspicks.horses.service.events.BetEvent;
 
 @Component
 public class BetEventListener {
