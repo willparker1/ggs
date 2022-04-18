@@ -8,14 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Horses" />
         <module name="porkerspicks" />
-        <module name="horses" />
+        <module name="ggs" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Horses" options="-parameters" />
-      <module name="horses" options="-parameters" />
+      <module name="ggs" options="-parameters" />
       <module name="porkerspicks" options="-parameters" />
     </option>
   </component>
