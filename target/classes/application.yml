@@ -15,10 +15,12 @@ spring:
   config:
     additional-location: classpath:betfairApi.yml
   datasource:
-#    url: jdbc:mysql://localhost:3306/ggs
-    url: jdbc:mysql://database-1.cvctlqjfqemh.us-east-1.rds.amazonaws.com:3306/ggs
-    username: porker
-    password: 4Norrie!
+    url: jdbc:mysql://localhost:3306/horses
+    username: root
+    password: norrie
+#    url: jdbc:mysql://database-1.cvctlqjfqemh.us-east-1.rds.amazonaws.com:3306/ggs
+#    username: porker
+#    password: 4Norrie!
     tomcat.max-wait: 20000 
     tomcat.max-active: 50 
     tomcat.max-idle: 20 
