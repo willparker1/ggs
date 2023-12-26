@@ -58,7 +58,7 @@ betfair:
   apiUrl: https://api.betfair.com/exchange/betting/rest/v1.0/
   
   #Bet size
-  betSize: 200.00
+  betSize: 100.00
   
   #Lay Seetings
   laySize: 6.00

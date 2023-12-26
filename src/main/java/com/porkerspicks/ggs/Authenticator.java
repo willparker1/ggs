@@ -55,7 +55,7 @@ public class Authenticator {
             HttpPost httpPost = new HttpPost("https://identitysso-cert.betfair.com/api/certlogin");
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
             nvps.add(new BasicNameValuePair("username", "willparker"));
-            nvps.add(new BasicNameValuePair("password", "14norrie"));
+            nvps.add(new BasicNameValuePair("password", "4Norrie!"));
  
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
  

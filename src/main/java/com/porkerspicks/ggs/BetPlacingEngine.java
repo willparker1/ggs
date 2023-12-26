@@ -62,49 +62,44 @@ public class BetPlacingEngine {
 
 	{
 		HorseSelection horseSelection = new HorseSelection();
-		horseSelection.setSelection("Kolisi");
-		horseSelection.setUol(4.7);
-		horseSelection.setStartTime(14,30);
+		horseSelection.setSelection("Graystown");
+		horseSelection.setUol(4.0);
+		horseSelection.setStartTime(13,18);
 		horseSelections.add( horseSelection );
 		horseSelection = new HorseSelection();
-		horseSelection.setSelection("Golden Voice");
-		horseSelection.setUol(3.5);
-		horseSelection.setStartTime(15,30);
+		horseSelection.setSelection("Protagonist");
+		horseSelection.setUol(4.0);
+		horseSelection.setStartTime(14,40);
+		horseSelections.add( horseSelection );
+		horseSelection = new HorseSelection();
+		horseSelection.setSelection("Desert Order");
+		horseSelection.setUol(3.8);
+		horseSelection.setStartTime(16,15);
+		horseSelections.add( horseSelection );
+		horseSelection = new HorseSelection();
+		horseSelection.setSelection("Atacama Desert");
+		horseSelection.setUol(5.0);
+		horseSelection.setStartTime(16,25);
+		horseSelections.add( horseSelection );
+		horseSelection = new HorseSelection();
+		horseSelection.setSelection("Mustazeed");
+		horseSelection.setUol(8.0);
+		horseSelection.setStartTime(17,00);
+		horseSelections.add( horseSelection );
+		horseSelection = new HorseSelection();
+		horseSelection.setSelection("Fiorina");
+		horseSelection.setUol(5.2);
+		horseSelection.setStartTime(18,00);
+		horseSelections.add( horseSelection );
+		horseSelection = new HorseSelection();
+		horseSelection.setSelection("Hello Me");
+		horseSelection.setUol(8.4);
+		horseSelection.setStartTime(19,00);
 		horseSelections.add( horseSelection );
 //		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Hebrides");
-//		horseSelection.setUol(3.7);
-//		horseSelection.setStartTime(15,40);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Dubai Icon");
-//		horseSelection.setUol(4.2);
-//		horseSelection.setStartTime(15,55);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Ghadbbaan");
-//		horseSelection.setUol(4.7);
-//		horseSelection.setStartTime(16,55);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Tribuna Uffizi");
-//		horseSelection.setUol(3.9);
-//		horseSelection.setStartTime(17,45);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("I Am The Sea");
-//		horseSelection.setUol(3.3);
-//		horseSelection.setStartTime(18,15);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Cobra Kai");
-//		horseSelection.setUol(4.9);
-//		horseSelection.setStartTime(20,15);
-//		horseSelections.add( horseSelection );
-//		horseSelection = new HorseSelection();
-//		horseSelection.setSelection("Onesmoothoperator");
-//		horseSelection.setUol(5.1);
-//		horseSelection.setStartTime(16,00);
+//		horseSelection.setSelection("Animato");
+//		horseSelection.setUol(5.8);
+//		horseSelection.setStartTime(20,10);
 //		horseSelections.add( horseSelection );
 	}
 
@@ -212,9 +207,15 @@ public class BetPlacingEngine {
 	
 							LimitOrder limitOrder = new LimitOrder();
 							limitOrder.setSize(betfairConfig.getBetSize());
-							double price = betFairHorseSelection.getLastPriceTraded()-0.5;
-							if ( price < 1.3 ) {
-								price = 1.3;
+							double price = 0;
+							if ( betFairHorseSelection.getLastPriceTraded() < 3 ) {
+								 price = betFairHorseSelection.getLastPriceTraded()- 0.5;
+							} else {
+								price = betFairHorseSelection.getLastPriceTraded() - 1;
+							}
+
+							if ( price < 1.2 ) {
+								price = 1.2;
 							}
 							limitOrder.setPrice(price);
 							limitOrder.setPersistenceType(PersistenceType.LAPSE);
